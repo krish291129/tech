@@ -15,7 +15,6 @@ const contactInfo = [
   { icon: Phone, label: "Phone", value: "+91 9328621177", href: "tel:+919328621177", color: "hsl(260,80%,60%)" },
   { icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: "https://wa.me/919328621177", color: "hsl(142,70%,45%)" },
   { icon: MapPin, label: "Location", value: "Gujarat, India", href: undefined, color: "hsl(120,60%,45%)" },
-  { icon: Clock, label: "Response", value: "Within 24 hours", href: undefined, color: "hsl(50,100%,50%)" },
 ];
 
 const ContactForm = () => {
@@ -44,25 +43,35 @@ const ContactForm = () => {
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Contact Info Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-10">
-        {contactInfo.map((item, i) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.08 }}
-            whileHover={{ scale: 1.05, y: -3 }}
-            onClick={() => item.href && (item.href.startsWith("http") ? window.open(item.href, "_blank") : (window.location.href = item.href))}
-            className="glass rounded-xl p-4 text-center cursor-pointer group"
-          >
-            <item.icon className="w-5 h-5 mx-auto mb-2" style={{ color: item.color }} />
-            <p className="font-accent text-xs text-muted-foreground tracking-wider mb-1">{item.label}</p>
-            <p className="text-foreground text-xs font-medium break-all">{item.value}</p>
-          </motion.div>
-        ))}
-      </div>
+    {/* Contact Info Cards */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+      {contactInfo.map((item, i) => (
+        <motion.div
+          key={item.label}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.08 }}
+          whileHover={{ scale: 1.05, y: -3 }}
+          onClick={() =>
+            item.href &&
+            (item.href.startsWith("http")
+              ? window.open(item.href, "_blank")
+              : (window.location.href = item.href))
+          }
+          className="glass rounded-xl p-4 text-center cursor-pointer group"
+        >
+          <item.icon className="w-6 h-6 mx-auto mb-2" style={{ color: item.color }} />
+          <p className="font-accent text-lg text-muted-foreground tracking-wider mb-1">
+            {item.label}
+          </p>
+          <p className="text-foreground text-lg font-medium break-all">
+            {item.value}
+          </p>
+        </motion.div>
+      ))}
+    </div>
+
 
       {/* Form + Sidebar */}
       <div className="grid lg:grid-cols-3 gap-8">
@@ -153,8 +162,8 @@ const ContactForm = () => {
                     <card.icon className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <p className="font-accent font-semibold text-foreground text-sm">{card.title}</p>
-                    <p className="text-muted-foreground text-xs">{card.desc}</p>
+                    <p className="font-accent font-semibold text-foreground text-bash">{card.title}</p>
+                    <p className="text-muted-foreground text-sm">{card.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -192,8 +201,8 @@ const ContactForm = () => {
                     {item.step}
                   </div>
                   <div>
-                    <p className="font-accent font-semibold text-foreground text-sm">{item.title}</p>
-                    <p className="text-muted-foreground text-xs">{item.desc}</p>
+                    <p className="font-accent font-semibold text-foreground text-bash">{item.title}</p>
+                    <p className="text-muted-foreground text-sm">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}

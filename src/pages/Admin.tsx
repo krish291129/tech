@@ -13,7 +13,8 @@ import {
   getAdminProfiles, removeAdminRole, addAdminUser,
   getAllUsers, toggleAdminRole,
   getBlogPosts, addBlogPost, updateBlogPost, deleteBlogPost,
-  getFAQs, addFAQ, updateFAQ, deleteFAQ
+  getFAQs, addFAQ, updateFAQ, deleteFAQ,
+  uploadBlogImage
 } from "@/lib/supabase-store";
 import StarRating from "@/components/StarRating";
 import { toast } from "sonner";
@@ -645,7 +646,11 @@ function BlogsPanel() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: "", content: "", excerpt: "", image_url: "", published: false });
+  const [form, setForm] = useState({ title: "", content: "", excerpt: "", published: false });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const imgRef = useRef<HTMLInputElement>(null);
 
   const load = async () => {
     setLoading(true);
@@ -655,15 +660,33 @@ function BlogsPanel() {
 
   useEffect(() => { load(); }, []);
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onload = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAdd = async () => {
     if (!form.title.trim()) { toast.error("Title required"); return; }
+    setUploading(true);
     try {
-      await addBlogPost(form);
-      setForm({ title: "", content: "", excerpt: "", image_url: "", published: false });
+      let image_url = "";
+      if (imageFile) {
+        image_url = await uploadBlogImage(imageFile);
+      }
+      await addBlogPost({ ...form, image_url });
+      setForm({ title: "", content: "", excerpt: "", published: false });
+      setImageFile(null);
+      setImagePreview("");
       setShowForm(false);
       toast.success("Blog post added!");
       load();
     } catch { toast.error("Failed"); }
+    setUploading(false);
   };
 
   return (
@@ -680,13 +703,28 @@ function BlogsPanel() {
         <div className="glass rounded-2xl p-6 neon-border border space-y-4">
           <input type="text" placeholder="Post Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-all" />
           <input type="text" placeholder="Excerpt (short summary)" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-all" />
-          <input type="url" placeholder="Cover Image URL" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-all" />
+          <div>
+            <button onClick={() => imgRef.current?.click()} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-accent border border-primary/50 text-primary hover:bg-primary/10 transition-all">
+              <Upload className="w-4 h-4" /> Upload Cover Image
+            </button>
+            <input ref={imgRef} type="file" accept="image/*" onChange={handleImageSelect} className="hidden" />
+            {imagePreview && (
+              <div className="relative mt-3 inline-block">
+                <img src={imagePreview} alt="Preview" className="w-40 h-24 object-cover rounded-lg" />
+                <button onClick={() => { setImageFile(null); setImagePreview(""); }} className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center text-xs">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+          </div>
           <textarea placeholder="Blog content..." value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} rows={6} className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-all resize-none" />
           <label className="flex items-center gap-2 text-sm text-foreground font-accent">
             <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} className="accent-primary" />
             Publish immediately
           </label>
-          <button onClick={handleAdd} className="w-full py-3 rounded-lg font-accent text-sm tracking-wider uppercase bg-primary text-primary-foreground hover:shadow-[0_0_30px_hsl(183_100%_50%/0.4)] transition-all">Add Post</button>
+          <button onClick={handleAdd} disabled={uploading} className="w-full py-3 rounded-lg font-accent text-sm tracking-wider uppercase bg-primary text-primary-foreground hover:shadow-[0_0_30px_hsl(183_100%_50%/0.4)] disabled:opacity-50 transition-all">
+            {uploading ? "Uploading..." : "Add Post"}
+          </button>
         </div>
       )}
 

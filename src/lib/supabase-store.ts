@@ -141,6 +141,15 @@ export async function uploadScreenshot(file: File): Promise<string> {
   return data.publicUrl;
 }
 
+// ── Upload blog image to storage ──
+export async function uploadBlogImage(file: File): Promise<string> {
+  const fileName = `${Date.now()}-${file.name}`;
+  const { error } = await supabase.storage.from("blog-images").upload(fileName, file);
+  if (error) throw error;
+  const { data } = supabase.storage.from("blog-images").getPublicUrl(fileName);
+  return data.publicUrl;
+}
+
 // ── Blog Posts ──
 export async function getBlogPosts(publishedOnly = true) {
   let query = supabase.from("blog_posts").select("*").order("created_at", { ascending: false });

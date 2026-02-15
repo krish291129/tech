@@ -3,6 +3,7 @@ import AboutSection from "@/components/AboutSection";
 import SkillsSection from "@/components/SkillsSection";
 import { ProjectsPreview, ContactPreview } from "@/components/HomeSections";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import FAQs from "./FAQs";
 
 const Index = () => {
   return (
@@ -13,6 +14,7 @@ const Index = () => {
       <ProjectsPreview />
       <TestimonialsSection />
       <ContactPreview />
+      <FAQs/>
     </main>
   );
 };

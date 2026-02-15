@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Calendar, ArrowRight, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import PageHero from "@/components/PageHero";
+import FAQs from "./FAQs";
 
 const Blogs = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -83,6 +84,7 @@ const Blogs = () => {
           </div>
         )}
       </div>
+      <FAQs/>
     </main>
   );
 };

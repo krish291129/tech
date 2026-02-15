@@ -6,6 +6,7 @@ import ReviewForm from "@/components/ReviewForm";
 import StarRating from "@/components/StarRating";
 import { FolderOpen, Sparkles, Star } from "lucide-react";
 import PageHero from "@/components/PageHero";
+import FAQs from "./FAQs";
 
 const Projects = () => {
   const [projects, setProjects] = useState<any[]>([]);
@@ -94,6 +95,7 @@ const Projects = () => {
           </div>
         )}
       </div>
+      <FAQs/>
     </main>
   );
 };

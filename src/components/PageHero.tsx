@@ -6,36 +6,16 @@ interface PageHeroProps {
   subtitle: string;
   title: string;
   description: string;
-  gradient: string;
-  orbColors: [string, string, string];
+  gradient?: string;
+  orbColors?: [string, string, string];
 }
 
-const PageHero = ({ icon: Icon, subtitle, title, description, gradient, orbColors }: PageHeroProps) => {
+const PageHero = ({ icon: Icon, subtitle, title, description }: PageHeroProps) => {
   return (
-    <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden">
-      {/* Unique gradient background per page */}
-      {/* <div className="absolute inset-0" style={{ background: gradient }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/60 to-background" /> */}
-
-      {/* Floating orbs with unique colors */}
-      <motion.div
-        className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[100px]"
-        style={{ background: orbColors[0] }}
-        animate={{ x: [0, 80, -60, 0], y: [0, -50, 40, 0], scale: [1, 1.3, 0.8, 1] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full opacity-15 blur-[80px] top-10 right-20"
-        style={{ background: orbColors[1] }}
-        animate={{ x: [0, -70, 40, 0], y: [0, 60, -30, 0], scale: [1, 0.7, 1.2, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute w-[250px] h-[250px] rounded-full opacity-10 blur-[70px] bottom-10 left-10"
-        style={{ background: orbColors[2] }}
-        animate={{ x: [0, 50, -40, 0], y: [0, -30, 50, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
+    <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden">
+      {/* Clean dark background */}
+      <div className="absolute inset-0 bg-background" />
+      <div className="absolute inset-0 bg-secondary/30" />
 
       <div className="relative z-10 container mx-auto px-4 text-center py-16 md:py-24">
         <motion.div

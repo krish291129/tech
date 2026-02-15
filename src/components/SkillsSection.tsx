@@ -24,9 +24,13 @@ const SkillsSection = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <p className="font-accent text-primary text-sm tracking-[0.3em] uppercase mb-3">What We Work With</p>
-          <h2 className="text-3xl md:text-5xl font-display font-bold gradient-text mb-4">Tech Stack</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto text-sm">
+          <p className="font-accent text-primary text-base tracking-[0.3em] uppercase mb-3">
+            What We Work With
+          </p>
+          <h2 className="text-3xl md:text-5xl font-display font-bold gradient-text mb-4">
+            Tech Stack
+          </h2>
+          <p className="text-muted-foreground max-w-lg mx-auto text-base">
             Technologies we're passionate about and continuously learning to build amazing products.
           </p>
         </motion.div>
@@ -56,8 +60,10 @@ const SkillsSection = () => {
                     <skill.icon className="w-4 h-4 text-primary-foreground" />
                   </div>
                   <div>
-                    <h3 className="font-accent font-semibold text-foreground text-xs tracking-wider">{skill.name}</h3>
-                    <span className="text-[10px] text-muted-foreground">{skill.level}%</span>
+                    <h3 className="font-accent font-semibold text-foreground text-base tracking-wider">
+                      {skill.name}
+                    </h3>
+                    <span className="text-base text-muted-foreground">{skill.level}%</span>
                   </div>
                 </div>
 

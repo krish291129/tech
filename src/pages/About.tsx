@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Users, Target, Lightbulb, Rocket, Heart, Code2, Award, TrendingUp } from "lucide-react";
 import PageHero from "@/components/PageHero";
+import FAQs from "./FAQs";
 
 const values = [
   { icon: Lightbulb, title: "Innovation First", desc: "We embrace new technologies and creative solutions to solve complex problems.", color: "from-[hsl(50,100%,50%)] to-[hsl(30,100%,55%)]", shadow: "hsl(50,100%,50%)" },
@@ -139,6 +140,7 @@ const About = () => {
           </div>
         </div>
       </section>
+      <FAQs/>
     </main>
   );
 };

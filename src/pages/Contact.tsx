@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import ContactForm from "@/components/ContactForm";
 import { MessageCircle } from "lucide-react";
 import PageHero from "@/components/PageHero";
+import FAQs from "./FAQs";
 
 const Contact = () => {
   return (
@@ -18,6 +19,7 @@ const Contact = () => {
       <div className="container mx-auto px-4 py-12">
         <ContactForm />
       </div>
+      <FAQs/>
     </main>
   );
 };

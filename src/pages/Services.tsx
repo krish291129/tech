@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import PageHero from "@/components/PageHero";
+import FAQs from "./FAQs";
 
 const services = [
   {
@@ -120,6 +121,7 @@ const Services = () => {
           </div>
         </motion.div>
       </div>
+      <FAQs/>
     </main>
   );
 };
