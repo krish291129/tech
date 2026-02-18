@@ -14,13 +14,26 @@ import {
   getAllUsers, toggleAdminRole,
   getBlogPosts, addBlogPost, updateBlogPost, deleteBlogPost,
   getFAQs, addFAQ, updateFAQ, deleteFAQ,
-  uploadBlogImage
+  uploadBlogImage,
+  getNewsletterSubscribers,
+  deleteNewsletterSubscriber,
+  toggleNewsletterStatus
 } from "@/lib/supabase-store";
+
 import StarRating from "@/components/StarRating";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-type Tab = "projects" | "upload" | "messages" | "reviews" | "admins" | "users" | "blogs" | "faqs";
+type Tab =
+  | "projects"
+  | "upload"
+  | "messages"
+  | "reviews"
+  | "admins"
+  | "users"
+  | "blogs"
+  | "faqs"
+  | "subscribers";
 
 const AdminPage = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -159,6 +172,8 @@ const AdminPage = () => {
             { key: "faqs" as Tab, label: "FAQs", icon: HelpCircle },
             { key: "users" as Tab, label: "Users", icon: Users },
             { key: "admins" as Tab, label: "Admins", icon: Shield },
+            { key: "subscribers" as Tab, label: "Subscribers", icon: Mail },
+
           ]).map((tab) => (
             <button
               key={tab.key}
@@ -182,10 +197,109 @@ const AdminPage = () => {
         {activeTab === "faqs" && <FAQsPanel />}
         {activeTab === "users" && <UsersPanel currentUserId={currentUserId} />}
         {activeTab === "admins" && <AdminsPanel currentUserId={currentUserId} />}
+        {activeTab === "subscribers" && <SubscribersPanel />}
+
       </div>
     </main>
   );
 };
+function SubscribersPanel() {
+  const [subs, setSubs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      setSubs(await getNewsletterSubscribers());
+    } catch {
+      toast.error("Failed to load subscribers");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-12 text-muted-foreground">
+        Loading subscribers...
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 mb-4">
+        <Mail className="w-5 h-5 text-primary" />
+        <h3 className="font-display text-lg text-foreground">
+          Newsletter Subscribers ({subs.length})
+        </h3>
+      </div>
+
+      {subs.length === 0 ? (
+        <p className="text-muted-foreground text-center py-12">
+          No subscribers yet.
+        </p>
+      ) : (
+        subs.map((s) => (
+          <div
+            key={s.id}
+            className="glass rounded-xl p-4 flex items-center justify-between"
+          >
+            <div>
+              <p className="font-accent font-semibold text-foreground text-sm">
+                {s.email}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {new Date(s.created_at).toLocaleDateString()}
+              </p>
+              {!s.active && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 font-accent">
+                  Inactive
+                </span>
+              )}
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={async () => {
+                  try {
+                    await toggleNewsletterStatus(s.id, !s.active);
+                    toast.success(
+                      s.active ? "Marked inactive" : "Activated"
+                    );
+                    load();
+                  } catch {
+                    toast.error("Failed");
+                  }
+                }}
+                className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all"
+                title="Toggle active"
+              >
+                {s.active ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
+              </button>
+
+              <button
+                onClick={async () => {
+                  try {
+                    await deleteNewsletterSubscriber(s.id);
+                    toast.success("Deleted");
+                    load();
+                  } catch {
+                    toast.error("Failed");
+                  }
+                }}
+                className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-all"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
 
 function ProjectsPanel() {
   const [projects, setProjects] = useState<any[]>([]);

@@ -20,6 +20,7 @@ import ParticleBackground from "./components/ParticleBackground";
 import SplashScreen from "./components/SplashScreen";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import AuthPopup from "./components/AuthPopup";
+import Chatbot from "./components/chatbot/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => {
           </Routes>
           <Footer />
           <FloatingWhatsApp />
+          <Chatbot />
           <AuthPopup />
         </BrowserRouter>
       </TooltipProvider>

@@ -1,18 +1,35 @@
 import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
+import { subscribeToNewsletter } from "@/lib/supabase-store";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    
-    // TODO: Connect to backend / email service (Mailchimp, Resend, etc.)
-    console.log("Subscribed:", email);
-    setEmail("");
+
+    if (!email.trim()) return;
+
+    setSubscribing(true);
+
+    try {
+      await subscribeToNewsletter(email.trim().toLowerCase());
+      toast.success("🎉 Subscribed successfully!");
+      setEmail("");
+    } catch (err: any) {
+      // Unique constraint error
+      if (err?.code === "23505") {
+        toast.error("You're already subscribed.");
+      } else {
+        toast.error("Subscription failed. Please try again.");
+      }
+    }
+
+    setSubscribing(false);
   };
 
   return (
@@ -45,9 +62,10 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="px-4 py-2 text-xs bg-primary text-primary-foreground rounded-md hover:opacity-90 transition"
+                disabled={subscribing}
+                className="px-4 py-2 text-xs bg-primary text-primary-foreground rounded-md hover:opacity-90 transition disabled:opacity-50"
               >
-                Subscribe
+                {subscribing ? "Subscribing..." : "Subscribe"}
               </button>
             </form>
           </div>
